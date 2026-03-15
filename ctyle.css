@@ -1,0 +1,168 @@
+    :root {
+        --eco-green: #4caf50;
+        --eco-dark: #388e3c;
+        --bg-light: #f1f8f2;
+        --glass-bg: rgba(255, 255, 255, 0.65);
+        --border-glass: rgba(255, 255, 255, 0.4);
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #e3f2e5 0%, #f7fff7 100%);
+        color: #333;
+        min-height: 100vh;
+    }
+
+    .glass {
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-glass);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Header */
+    .main-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 50px;
+        margin: 20px auto;
+        max-width: 1200px;
+        border-radius: 20px;
+    }
+
+    .main-header nav a {
+        text-decoration: none;
+        color: #444;
+        margin: 0 15px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .btn-account {
+        background: var(--eco-green);
+        color: white;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 12px;
+        cursor: pointer;
+    }
+
+    /* Grid Layout */
+    .dashboard {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Cards */
+    .card {
+        border-radius: 40px;
+        padding: 35px;
+        margin-bottom: 30px;
+    }
+
+    h2 { color: var(--eco-dark); margin-top: 0; }
+
+    input {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 15px;
+        background: white;
+        box-sizing: border-box;
+    }
+
+    .btn-green {
+        width: 100%;
+        background: var(--eco-green);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: transform 0.2s;
+    }
+
+    .btn-green:active { transform: scale(0.98); }
+
+    /* Tracking specific */
+    .steps-container {
+        display: flex;
+        justify-content: space-between;
+        margin: 40px 0;
+        position: relative;
+    }
+
+    .step {
+        text-align: center;
+        font-size: 0.75rem;
+        flex: 1;
+    }
+
+    .step::before {
+        content: '';
+        display: block;
+        width: 30px;
+        height: 30px;
+        background: white;
+        border: 2px solid var(--eco-green);
+        border-radius: 50%;
+        margin: 0 auto 10px;
+    }
+
+    .step.active::before {
+        background: var(--eco-green);
+        box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
+    }
+
+    .progress-bar {
+        height: 12px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 15px 0;
+    }
+
+    .progress-bar .fill {
+        height: 100%;
+        background: var(--eco-green);
+    }
+
+    .stats {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    .bonus-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        padding: 20px;
+        border-radius: 25px;
+    }
+
+    .percentage {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--eco-green);
+        display: block;
+    }
+
+    /* Mobile */
+    @media (max-width: 800px) {
+        .dashboard { grid-template-columns: 1fr; }
+        .main-header { margin: 10px; padding: 15px; }
+        .main-header nav { display: none; }
+    }

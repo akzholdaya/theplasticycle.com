@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheplastiCycle — Болашақты бірге өңдейміз</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffff;
+            --accent-green: #34C759;
+            --text-dark: #070807;
+            --card-white: #13941b;
+            --gray-text: #128050;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        body { background-color: var(--bg-color); color: var(--text-dark); -webkit-font-smoothing: antialiased; }
+
+        /* --- Навигация --- */
+        .navbar {
+            padding: 20px 50px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: rgba(245, 245, 247, 0.8); backdrop-filter: blur(20px); z-index: 1000;
+        }
+        .logo { font-weight: 600; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+        nav a { text-decoration: none; color: var(--text-dark); margin-left: 30px; font-size: 0.9rem; opacity: 0.6; transition: 0.3s; }
+        nav a:hover { opacity: 1; color: var(--accent-green); }
+
+        /* Тіл ауыстырғыш стилі */
+        .lang-switcher { display: flex; gap: 10px; margin-left: 20px; }
+        .lang-switcher button { 
+            background: none; border: 1px solid #ddd; padding: 5px 10px; 
+            border-radius: 8px; cursor: pointer; font-size: 0.8rem; transition: 0.3s;
+        }
+        .lang-switcher button.active { background: var(--accent-green); color: white; border-color: var(--accent-green); }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+        /* --- 1 БЕТ: БІЗ ЖАЙЛЫ ЖӘНЕ ПРОБЛЕМА --- */
+        .hero { text-align: center; padding: 100px 0; }
+        .hero h1 { font-size: 4rem; letter-spacing: -2px; margin-bottom: 20px; }
+        .problem-box { background: #1d1d1f; color: white; padding: 60px; border-radius: 40px; margin-bottom: 50px; }
+
+        /* --- ТРЕКИНГ ЖҮЙЕСІ (Процесс) --- */
+        .process-flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 30px; }
+        .step { background: #fbfbfc; padding: 15px; border-radius: 15px; text-align: center; font-size: 0.8rem; border: 1px solid #e5e5e7; opacity: 0.4; transition: 0.5s; }
+        .step.active { opacity: 1; border-color: var(--accent-green); background: white; transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+        /* --- 2 БЕТ: МАГАЗИН --- */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 40px; }
+        .card { background: white; border-radius: 30px; padding: 30px; transition: 0.4s; position: relative; overflow: hidden; border: 1px solid #eee; }
+        .card:hover { transform: translateY(-10px); }
+        .price-tag { color: var(--accent-green); font-weight: 600; font-size: 1.2rem; }
+
+        /* --- 3 БЕТ: БОНУС ПОРТАЛЫ --- */
+        .bonus-section { background: linear-gradient(135deg, #34C759 0%, #28a745 100%); color: white; border-radius: 40px; padding: 60px; text-align: center; margin: 80px 0; }
+        .bonus-card { background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; display: inline-block; margin-top: 20px; }
+
+        /* --- 4 БЕТ: БАЙЛАНЫС --- */
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 80px 0; }
+        .contact-info a { display: block; margin-bottom: 15px; color: var(--text-dark); text-decoration: none; font-size: 1.1rem; }
+
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #d2d2d7; outline: none; }
+        .btn { background: var(--text-dark); color: white; padding: 15px 30px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; width: 100%; }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader { display: none; position: absolute; width: 80px; height: 80px; border: 4px solid rgba(52, 199, 89, 0.1); border-top: 4px solid var(--accent-green); border-radius: 50%; animation: spin 1s linear infinite; }
+        .icon-wrapper { width: 100px; height: 100px; background: #f5f5f7; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; position: relative; border: 2px solid #eee; overflow: hidden; }
+        .step-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; transition: 0.3s; }
+        .check-mark { display: none; position: absolute; background: var(--accent-green); color: white; width: 30px; height: 30px; border-radius: 50%; line-height: 30px; font-weight: bold; font-size: 14px; bottom: 5px; right: 5px; border: 3px solid white; text-align: center;}
+        
+        .step-item.active .step-img { opacity: 1; transform: scale(1.1); }
+        .step-item.processing .loader { display: block; }
+        .step-item.done .check-mark { display: block; }
+
+        @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 2.5rem; } .navbar { padding: 20px; } }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">theplasticycle.com</div>
+        <nav>
+            <a href="#about" data-key="nav1">Біз жайлы</a>
+            <a href="#track" data-key="nav2">Трекинг</a>
+            <a href="#shop" data-key="nav3">Дүкен</a>
+            <a href="#bonus" data-key="nav4">Бонустар</a>
+            <a href="#contact" data-key="nav5">Байланыс</a>
+        </nav>
+        <div class="lang-switcher">
+            <button onclick="switchLang('kk')" id="lang-kk" class="active">KK</button>
+            <button onclick="switchLang('ru')" id="lang-ru">RU</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero" id="about">
+            <span style="color: var(--accent-green); font-weight: 600; letter-spacing: 2px;">ECO-INNOVATION</span>
+            <h1 data-key="hero_h1">Болашақты бірге өңдейміз.</h1>
+            <p class="sub-text" data-key="hero_p">Пластик қалдықтары — бұл қоқыс емес, бұл жаңа өнімнің бастамасы.</p>
+            
+            <div class="problem-box" style="margin-top: 60px; text-align: left;">
+                <h2 style="margin-bottom: 20px;" data-key="prob_h2">Біз жайлы</h2>
+                <p style="opacity: 0.8; font-size: 1.1rem; line-height: 1.6;" data-key="prob_p">
+                    ThePlastiCycle — бұл пластик қалдықтарын қайта өңдеудің ашық жүйесін құруға және оларды абаттандыруға арналған пайдалы әрі төзімді бұйымдар ретінде экономикалық айналымға қайтаруға бағытталған экологиялық және технологиялық жоба.
+                </p>
+            </div>
+        </section>
+
+        <section id="track" style="margin-bottom: 100px;">
+            <div class="card">
+                <h2 style="margin-bottom: 10px;" data-key="track_h2">Өз пластигіңді бақыла</h2>
+                <p style="opacity: 0.5; margin-bottom: 30px;" data-key="track_p">ID нөмірін енгізіп, процесті бақылаңыз</p>
+                
+                <div style="display: flex; gap: 10px; max-width: 500px;">
+                    <input type="text" id="trackInput" placeholder="PL-2026">
+                    <button class="btn" style="width: auto;" onclick="startCycle()" data-key="track_btn">Трек</button>
+                </div>
+
+                <div class="card glass" style="border-radius: 40px; padding: 50px; margin-top: 40px;">
+                    <h2 style="text-align: center; margin-bottom: 40px;" data-key="cycle_h2">Өндіріс циклі</h2>
+                    <div class="process-steps" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+                        <div class="step-item" id="item1">
+                            <div class="icon-wrapper"><img src="img/6.PNG" class="step-img"><div class="loader"></div><div class="check-mark">✓</div></div>
+                            <b data-key="step1">Сұрыптау</b>
+                        </div>
+                        <div class="step-item" id="item2">
+                            <div class="icon-wrapper"><img src="img/7.PNG" class="step-img"><div class="loader"></div><div class="check-mark">✓</div></div>
+                            <b data-key="step2">Тазалау</b>
+                        </div>
+                        <div class="step-item" id="item3">
+                            <div class="icon-wrapper"><img src="img/8.PNG" class="step-img"><div class="loader"></div><div class="check-mark">✓</div></div>
+                            <b data-key="step3">Ұсақтау</b>
+                        </div>
+                        <div class="step-item" id="item4">
+                            <div class="icon-wrapper"><img src="img/5.PNG" class="step-img"><div class="loader"></div><div class="check-mark">✓</div></div>
+                            <b data-key="step4">Құю (Press)</b>
+                        </div>
+                        <div class="step-item" id="item5">
+                            <div class="icon-wrapper"><img src="img/10.PNG" class="step-img"><div class="loader"></div><div class="check-mark">✨</div></div>
+                            <b data-key="step5">Дайын продукт</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="shop">
+            <h2 style="text-align: center;" data-key="shop_h2">Қайта өңделген өнімдер</h2>
+            <div class="product-grid">
+                <div class="card">
+                    <h3 data-key="prod1_h">орындық</h3>
+                    <img src="img/4.PNG" style="width: 100%; border-radius: 20px; margin: 10px 0;">
+                    <p data-key="prod1_p">250 пластик қақпағынан жасалған.</p>
+                    <div class="price-tag">40 000 ₸</div>
+                </div>
+                <div class="card">
+                    <h3 data-key="prod2_h">брусчатка</h3>
+                    <img src="img/11.PNG" style="width: 100%; border-radius: 20px; margin: 10px 0;">
+                    <p data-key="prod2_p">Квадрат метр бағасы.</p>
+                    <div class="price-tag">9000 ₸</div>
+                </div>
+                <div class="card">
+                    <h3 data-key="prod3_h">қоқыс жәшігі</h3>
+                    <img src="img/3.PNG" style="width: 100%; border-radius: 20px; margin: 10px 0;">
+                    <p data-key="prod3_p">Төзімді, қайта өңделген полимер.</p>
+                    <div class="price-tag">18 000₸</div>
+                </div>
+                <div class="card">
+                    <h3 data-key="prod4_h">бағандар</h3>
+                    <img src="img/1.PNG" style="width: 100%; border-radius: 20px; margin: 10px 0;">
+                    <p data-key="prod4_p">Төзімді, қайта өңделген полимер.</p>
+                    <div class="price-tag">20 000 ₸</div>
+                </div>
+                <div class="card">
+                    <h3 data-key="prod5_h">Гүлзарлар</h3>
+                    <img src="img/2.PNG" style="width: 100%; border-radius: 20px; margin: 10px 0;">
+                    <p data-key="prod5_p">Төзімді, қайта өңделген полимер.</p>
+                    <div class="price-tag">25 000 ₸</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="bonus" class="bonus-section">
+            <h2 data-key="bonus_h2">Пластик өткіз — Бонус ал!</h2>
+            <p style="margin-top: 15px; opacity: 0.9;" data-key="bonus_p">Әрбір өткізілген 15 кг үшін 100 эко-бонус беріледі.</p>
+            <div class="bonus-card">
+                <div data-key="bonus_disc">Сіздің жеңілдігіңіз:</div>
+                <div style="font-size: 2.5rem; font-weight: 600;">-10%</div>
+                <div data-key="bonus_next">Келесі сатып алуға</div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-grid">
+            <div class="contact-info">
+                <h2 style="margin-bottom: 30px;" data-key="contact_h2">Бізбен байланысу</h2>
+                <a href="mailto:aasus6814@gmail.com">aasus6814@gmail.com</a>
+                <a href="tel:+77762252609">87762252609</a>
+                <a>Instagram: theplasticycle</a>
+            </div>
+            <div class="card">
+                <h3 data-key="form_h3">Хабарлама жазыңыз</h3>
+                <form style="margin-top: 20px;">
+                    <input type="text" placeholder="Атыңыз" id="form_name">
+                    <input type="email" placeholder="Email">
+                    <textarea placeholder="Хабарламаңыз" style="height: 100px;" id="form_msg"></textarea>
+                    <button type="button" class="btn" data-key="form_btn">Жіберу</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <footer style="padding: 50px; text-align: center; border-top: 1px solid #d2d2d7; margin-top: 50px;">
+        <p style="opacity: 0.4; font-size: 0.8rem;">© 2026 TheplastiCycle. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const langData = {
+            kk: {
+                nav1: "Біз жайлы", nav2: "Трекинг", nav3: "Дүкен", nav4: "Бонустар", nav5: "Байланыс",
+                hero_h1: "Болашақты бірге өңдейміз.", hero_p: "Пластик қалдықтары — бұл қоқыс емес, бұл жаңа өнімнің бастамасы.",
+                prob_h2: "Біз жайлы", 
+                prob_p: "ThePlastiCycle — бұл пластик қалдықтарын қайта өңдеудің ашық жүйесін құруға және оларды абаттандыруға арналған пайдалы әрі төзімді бұйымдар ретінде экономикалық айналымға қайтаруға бағытталған экологиялық және технологиялық жоба. <br><br> <b>Неге бұл маңызды?</b> <br> Бүгінгі таңда пластик қалдықтары ең күрделі экологиялық мәселелердің бірі болып табылады. Пластиктің орасан зор мөлшері небәрі бірнеше минут қана пайдаланылады, бірақ табиғатта жүздеген жылдар бойы шірімей жатады. Сонымен қатар, қалдықтардың басым бөлігі қайта өңделмей, полигондарға тасталады. Біз пластик қоқысқа айналмауы тиіс деп есептейміз — ол жаңа өнім ретінде екінші өмір алуы керек және соған лайықты.",
+                track_h2: "Өз пластигіңді бақыла", track_p: "ID нөмірін енгізіп, процесті бақылаңыз", track_btn: "Трек",
+                cycle_h2: "Өндіріс циклі", step1: "Сұрыптау", step2: "Тазалау", step3: "Ұсақтау", step4: "Құю (Press)", step5: "Дайын",
+                shop_h2: "Қайта өңделген өнімдер", prod1_h: "орындық", prod1_p: "250 пластик қақпағынан жасалған.",
+                prod2_h: "брусчатка", prod2_p: "Шаршы метр бағасы.", prod3_h: "қоқыс жәшігі", prod4_h: "бағандар", prod5_h: "Гүлзарлар",
+                bonus_h2: "Пластик өткіз — Бонус ал!", bonus_p: "Әрбір өткізілген 15 кг үшін 100 эко-бонус беріледі.",
+                bonus_disc: "Сіздің жеңілдігіңіз:", bonus_next: "Келесі сатып алуға",
+                contact_h2: "Бізбен байланысу", form_h3: "Хабарлама жазыңыз", form_btn: "Жіберу"
+            },
+            ru: {
+                nav1: "О нас", nav2: "Трекинг", nav3: "Магазин", nav4: "Бонусы", nav5: "Контакты",
+                hero_h1: "Перерабатываем будущее вместе.", hero_p: "Пластиковые отходы — это не мусор, а начало нового продукта.",
+                prob_h2: "О нас", 
+                prob_p: "ThePlastiCycle — это экологический и технологический проект, направленный на создание открытой системы переработки пластиковых отходов и их возвращение в экономический оборот в виде полезных и долговечных изделий для благоустройства. <br><br> <b>Почему это важно?</b> <br> На сегодняшний день пластиковые отходы являются одной из самых сложных экологических проблем. Огромное количество пластика используется всего несколько минут, но разлагается в природе сотни лет. Кроме того, большая часть отходов не перерабатывается, а отправляется на полигоны. Мы считаем, что пластик не должен становиться мусором — он заслуживает второй жизни в виде нового продукта.",
+                track_h2: "Отследите свой пластик", track_p: "Введите ID номер и следите за процессом", track_btn: "Трек",
+                cycle_h2: "Производственный цикл", step1: "Сортировка", step2: "Очистка", step3: "Дробление", step4: "Прессовка", step5: "Готовый продукт",
+                shop_h2: "Продукция из вторсырья", prod1_h: "Скамейка", prod1_p: "Изготовлено из 250 пластиковых крышек.",
+                prod2_h: "Брусчатка", prod2_p: "Цена за квадратный метр.", prod3_h: "Мусорный бак", prod4_h: "Столбы", prod5_h: "Клумбы",
+                bonus_h2: "Сдай пластик — получи бонус!", bonus_p: "За каждые 15 кг пластика начисляется 100 эко-бонусов.",
+                bonus_disc: "Ваша скидка:", bonus_next: "На следующую покупку",
+                contact_h2: "Связаться с нами", form_h3: "Напишите нам", form_btn: "Отправить"
+            }
+        };
+
+        function switchLang(lang) {
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[lang][key]) {
+                    el.innerHTML = langData[lang][key];
+                }
+            });
+            document.getElementById('lang-kk').classList.toggle('active', lang === 'kk');
+            document.getElementById('lang-ru').classList.toggle('active', lang === 'ru');
+        }
+
+        function startCycle() {
+            const id = document.getElementById('trackInput').value;
+            if(!id) return alert("ID енгізіңіз / Введите ID");
+            
+            for(let i=1; i<=5; i++) {
+                let el = document.getElementById('item'+i);
+                el.classList.remove('active', 'processing', 'done');
+            }
+
+            let currentStep = 1;
+            function runStep() {
+                if(currentStep > 5) {
+                    alert("Дайын! / Готово!");
+                    return;
+                }
+                let el = document.getElementById('item' + currentStep);
+                el.classList.add('processing', 'active');
+                setTimeout(() => {
+                    el.classList.remove('processing');
+                    el.classList.add('done');
+                    currentStep++;
+                    runStep();
+                }, 1500);
+            }
+            runStep();
+        }
+    </script>
+</body>
+</html>
